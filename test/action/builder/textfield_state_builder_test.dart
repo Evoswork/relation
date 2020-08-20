@@ -37,7 +37,7 @@ void main() {
       final textFieldStateBuilder = TextFieldStateBuilder(
           state: testData,
           stateBuilder: (context, data) {
-            if (data.hasError) {
+            if (data.stateWidget == StateWidget.error) {
               return Text('error');
             }
             return Text('test');
@@ -60,13 +60,13 @@ void main() {
 
   testWidgets(
     'TextfieldStreamBuilder loading test',
-        (WidgetTester tester) async {
+    (WidgetTester tester) async {
       final testData = TextFieldStreamedState('test');
 
       final textFieldStateBuilder = TextFieldStateBuilder(
           state: testData,
           stateBuilder: (context, data) {
-            if (data.isLoading) {
+            if (data.stateWidget == StateWidget.loading) {
               return Text('loading');
             }
             return Text('test');

@@ -40,43 +40,38 @@ class EntityStreamedState<T> extends StreamedState<EntityState<T>>
   }
 }
 
+/// State has content/loading/error
+enum StateWidget { error, loading, content }
+
 /// State of some logical entity
 class EntityState<T> {
   /// Data of entity
   final T data;
 
-  /// State is loading
-  final bool isLoading;
-
-  /// State has error
-  final bool hasError;
+  final StateWidget stateWidget;
 
   /// Error from state
   ExceptionWrapper error;
 
   EntityState({
     this.data,
-    this.isLoading = false,
-    this.hasError = false,
+    this.stateWidget = StateWidget.content,
     dynamic error,
   }) : error = ExceptionWrapper(error);
 
   /// Loading constructor
   EntityState.loading([T previousData])
-      : isLoading = true,
-        hasError = false,
+      : stateWidget = StateWidget.loading,
         data = previousData;
 
   /// Error constructor
   EntityState.error([dynamic error, T previousData])
-      : isLoading = false,
-        hasError = true,
+      : stateWidget = StateWidget.error,
         error = ExceptionWrapper(error),
         data = previousData;
 
   /// Content constructor
   EntityState.content([T data])
-      : isLoading = false,
-        hasError = false,
+      : stateWidget = StateWidget.content,
         data = data;
 }

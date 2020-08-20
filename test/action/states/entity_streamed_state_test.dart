@@ -21,7 +21,7 @@ void main() {
   test('EntityStreamedState loading test', () {
     final entityStreamedState = EntityStreamedState<String>();
     entityStreamedState.stream.listen((event) {
-      expect(event.isLoading, true);
+      expect(event.stateWidget, StateWidget.loading);
     });
     entityStreamedState.loading();
   });

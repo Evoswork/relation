@@ -15,6 +15,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:relation/src/relation/state/entity_state.dart';
 
+import '../relation/state/entity_state.dart';
+
 typedef DataWidgetBuilder<T> = Widget Function(BuildContext, T data);
 typedef ErrorWidgetBuilder = Widget Function(BuildContext, Exception error);
 
@@ -75,23 +77,19 @@ class EntityStateBuilder<T> extends StatelessWidget {
       initialData: streamedState.value,
       builder: (context, snapshot) {
         final streamData = snapshot.data;
-        if (streamData == null || streamData.isLoading) {
-          if (streamData?.data != null && loadingBuilder != null) {
-            return loadingBuilder(context, streamData.data);
-          } else {
-            return loadingChild;
-          }
-        } else if (streamData.hasError) {
-          if (streamData.data != null && errorBuilder != null) {
-            return errorBuilder(context, streamData.data);
-          } else {
-            return errorChild;
-          }
-        } else if (streamData.data != null) {
-          return child(context, streamData.data);
+        switch (streamData.stateWidget) {
+          case StateWidget.content:
+            return child(context, streamData.data);
+          case StateWidget.loading:
+            return streamData?.data != null
+                   ? loadingBuilder(context, streamData.data)
+                   : loadingChild;
+          case StateWidget.error:
+          default:
+            return streamData.data != null
+                   ? errorBuilder(context, streamData.data)
+                   : errorChild;
         }
-
-        return errorChild;
       },
     );
   }
